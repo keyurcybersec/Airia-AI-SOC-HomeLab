@@ -55,8 +55,8 @@ The system captures live network traffic on an internal server, detects suspicio
 ## Architecture Overview
  
 ```
-┌─────────────────────┐         ICMP Flood         ┌──────────────────────────┐
-│                     │ ─────────────────────────► │                          │
+┌─────────────────────┐         ICMP Flood          ┌──────────────────────────┐
+│                     │ ─────────────────────────►  │                          │
 │   Attacker VM       │                             │   Internal Server VM     │
 │   (Ubuntu)          │                             │   (Kali Linux)           │
 │                     │                             │   Running Python Script  │
@@ -110,13 +110,13 @@ The system captures live network traffic on an internal server, detects suspicio
  
 **Objective:** Build the isolated virtual lab for simulating attacks and monitoring
  
-- Installed VirtualBox on the host machine (16GB RAM recommended)
+- Installed VMware on the host machine (16GB RAM recommended)
 - Created two virtual machines:
   - **Attacker VM** — Ubuntu, used to generate malicious traffic
   - **Internal Server VM** — Kali Linux, runs the Python monitoring script
 - Configured both VMs with **Bridged Networking** so they share the same subnet
 - Verified both machines could communicate via ping
-- Noted the internal server IP: `192.168.0.206`
+- Noted the internal server IP: `192.168.x.xxx`
  
 ---
  
@@ -146,7 +146,7 @@ The system captures live network traffic on an internal server, detects suspicio
  
 **Objective:** Deploy the network monitoring and alerting automation
  
-- Wrote `soc_capture.py` on the Kali Linux internal server
+- Wrote `sc.py` on the Kali Linux internal server
 - Configured key parameters:
   ```python
   INTERFACE = "eth0"          # Network interface to monitor
@@ -173,11 +173,7 @@ The system captures live network traffic on an internal server, detects suspicio
  
 - From the Ubuntu attacker VM, ran a ping flood targeting the internal server:
   ```bash
-  ping 192.168.0.206 -c 50
-  ```
-- For a more aggressive simulation:
-  ```bash
-  sudo ping -f 192.168.0.206
+  ping 192.168.x.xxx -c 50
   ```
 - Observed packets arriving on the internal server while the Python script was running
 - The attacker IP exceeded the threshold of 40 packets within the capture window
@@ -190,7 +186,7 @@ The system captures live network traffic on an internal server, detects suspicio
  
 - On the Kali Linux server, executed:
   ```bash
-  sudo python3 soc_capture.py
+  sudo python3 sc.py
   ```
 - Script output confirmed:
   - TShark captured packets on `eth0` for 100 seconds
@@ -207,19 +203,6 @@ The system captures live network traffic on an internal server, detects suspicio
  
 The Airia agent processed the JSON alert and returned a structured triage report including:
  
-- **Threat Classification:** Suspicious Network Volume / ICMP Flood
-- **Risk Score:** 55–75 / 100 (Medium to High depending on packet count)
-- **Risk Level:** Medium / High
-- **MITRE ATT&CK Mapping:**
-  - Tactic: Impact
-  - Technique: T1498 — Network Denial of Service
-- **Recommended Actions:**
-  - Monitor the source IP for continued activity
-  - Enrich with threat intelligence
-  - Block IP at the firewall if behaviour persists
-  - Escalate to Tier 2 if score exceeds 80
-- **Executive Summary:** Plain-language business impact summary suitable for management
- 
 ---
  
 ### Step 7: Review and Validate Results
@@ -231,20 +214,6 @@ The Airia agent processed the JSON alert and returned a structured triage report
 - Reviewed the AI-generated risk score and MITRE mapping for accuracy
 - Tested edge cases: traffic below threshold (no alert generated), multiple IPs
  
----
- 
-## Project Files
- 
-```
-soc-analyst-lab/
-├── soc_capture.py        # Main Python automation script
-├── soc_playbook.txt      # SOC playbook used to train the Airia AI agent
-├── requirements.txt      # Python dependencies
-├── .env.example          # Template for API credentials (safe to commit)
-├── .gitignore            # Excludes .env, .pcap, .csv, alert.json
-├── screenshots/          # Lab screenshots
-└── README.md             # This file
-```
  
 ---
  
@@ -255,43 +224,14 @@ soc-analyst-lab/
 - Python 3.x
 - TShark: `sudo apt install tshark`
 - Airia.ai account with a deployed SOC agent
- 
-### Installation
- 
-```bash
-git clone https://github.com/YOUR_USERNAME/soc-analyst-lab.git
-cd soc-analyst-lab
-pip install -r requirements.txt
-cp .env.example .env
-# Edit .env and add your Airia API URL and Key
-```
+
  
 ### Run
  
 ```bash
-sudo python3 soc_capture.py
+sudo python3 sc.py
 ```
- 
----
- 
-## Sample Alert JSON
- 
-```json
-{
-    "alert_id": "SOC-A3F1B2C4",
-    "alert_type": "Suspicious Network Volume",
-    "indicator_type": "ip",
-    "indicator_value": "192.168.0.105",
-    "destination_host": "Internal-server",
-    "destination_ip": "192.168.0.206",
-    "evidence": {
-        "packet_count": 87,
-        "time_window_seconds": 100,
-        "data_source": "traffic.pcap"
-    },
-    "analyst_question": "Is this expected activity or suspicious scanning/noise?"
-}
-```
+
  
 ---
  
@@ -329,12 +269,9 @@ This project is built **strictly for educational purposes**. All testing was con
  
 ## Author
  
-**[Your Name]**  
+**Keyur Dobariya**  
 Cybersecurity Enthusiast | Aspiring SOC Analyst
- 
-- 📧 Email: your.email@gmail.com  
-- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com)  
-- 🐙 GitHub: [github.com/yourusername](https://github.com)
+
  
 *This project demonstrates hands-on cybersecurity skills including network monitoring, Python automation, AI integration, and SOC triage workflows. Built as part of continuous learning and professional development in the cybersecurity field.*
  
