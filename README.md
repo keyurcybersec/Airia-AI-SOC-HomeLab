@@ -152,7 +152,7 @@ The system captures live network traffic on an internal server, detects suspicio
   INTERFACE = "eth0"          # Network interface to monitor
   CAPTURE_DURATION = 100      # Capture window in seconds
   THRESHOLD = 40              # Packet count to trigger an alert
-  DESTINATION_IP = "192.168.0.206"
+  DESTINATION_IP = "192.168.x.xxx"
   ```
 - Installed required dependencies:
   ```bash
