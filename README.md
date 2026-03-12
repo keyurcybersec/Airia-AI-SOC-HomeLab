@@ -250,6 +250,45 @@ The AI agent was trained using a structured SOC playbook that enforces:
 | Executive Summary | Generates a 2–3 sentence plain-language business impact summary |
  
 ---
+
+## Project Screenshots
+ 
+### 1. Internal Server Network Configuration
+![ifconfig output showing Kali Linux IP](1.jpg)
+ 
+**Description:** Terminal output of `ifconfig` on the Kali Linux internal server (VM). Shows the active network interface `eth0` with IP address `192.168.x.xxx`, confirming the machine is live on the network and ready to capture traffic. The loopback interface `lo` is also visible confirming normal system operation.
+ 
+---
+ 
+### 2. Python Script Execution — Capture Started
+![Running sc.py on Kali Linux](2.jpg)
+ 
+**Description:** Shows the script `sc.py` being opened with `nano` for configuration, followed by execution with `python3 sc.py`. The terminal confirms TShark has started capturing ICMP traffic on interface `eth0` for 100 seconds. The packet counter is actively incrementing, indicating live traffic is being received from the attacker VM.
+ 
+---
+ 
+### 3. Attacker VM — ICMP Flood in Progress
+![Ubuntu attacker pinging internal server](3.jpg)
+ 
+**Description:** The Ubuntu attacker VM actively sending ICMP ping packets to the internal Kali Linux server at `192.168.x.xxx`. The continuous stream of replies (sequence numbers 27–47 visible) demonstrates a sustained ping flood simulating real-world ICMP-based network reconnaissance or DoS traffic. This traffic is what the Python script detects on the server side.
+ 
+---
+ 
+### 4. Full Pipeline Output — AI Triage Response
+![Complete sc.py output with Airia AI response](4.jpg)
+ 
+**Description:** The complete end-to-end pipeline output. TShark captured **91 ICMP packets** from source IP `192.168.x.xxx` within the 100-second window — well above the threshold of 40. The script generated alert `SOC-DAE072BC`, wrote it to `alert.json`, and sent it to the Airia AI agent via API. The AI agent responded with HTTP 200 and returned a full triage report:
+ 
+| Field | Value |
+|-------|-------|
+| **Alert ID** | SOC-DAE072BC |
+| **Threat Classification** | Suspicious Network Volume |
+| **Risk Score** | 30 / 100 |
+| **Risk Level** | Medium |
+| **Confidence Level** | Medium |
+| **MITRE Mapping** | Uncertain based on available evidence |
+| **Escalation Required** | False |
+ 
  
 ## References
  
