@@ -28,7 +28,7 @@ to analyze alerts in real time based on a structured SOC playbook.
 
 ### Installation
 
-git clone https://github.com/keyurcybersec/soc-analyst-lab.git
+git clone (https://github.com/keyurcybersec/Airia-AI-SOC-HomeLab)
 cd soc-analyst-lab
 pip install -r requirements.txt
 cp .env.example .env   # Then fill in your API credentials
