@@ -300,7 +300,7 @@ The AI agent was trained using a structured SOC playbook that enforces:
  
 ---
  
-## ⚠️ Disclaimer
+## Disclaimer
  
 This project is built **strictly for educational purposes**. All testing was conducted in a controlled, isolated virtual lab environment. Do not use these techniques on networks or systems you do not own or have explicit permission to test.
  
